@@ -14,7 +14,8 @@ function Widget()
 	this.dom = {
 		userSpan:document.getElementById("user"),
 		locationSpan:document.getElementById("location"),
-		backgroundEl:document.getElementById("imgBackground")
+		backgroundEl:document.getElementById("imgBackground"),
+		whenSpan:document.getElementById("when")
 	};
 	this.audio = {
 		near:"sounds\\e-pacantre.wav",
@@ -78,6 +79,7 @@ Widget.prototype.checkLidok = function(obj, that)
 	that.currentLocationName = res.area.replace("Office KBP","");
 	that.dom.locationSpan.innerHTML = res.direction == "in" ? "Now in " +  that.currentLocationName : "Last seen in " + that.currentLocationName;
 	that.dom.userSpan.innerHTML = that.settings.firstName + " " + that.settings.lastName;
+	that.dom.whenSpan.innerHTML = moment(res.timestamp).fromNow();
 	if (res.area == that.settings.homeArea && res.direction == "in")
 	{
 		that.changeState(true);
