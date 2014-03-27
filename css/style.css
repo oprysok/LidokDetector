@@ -1,0 +1,27 @@
+        body
+        {
+            background: #fff;
+            margin: 0;
+            width: 165px;
+            height: 75px;
+            font-family: verdana;
+            font-weight: bold;
+            font-size: 10px;
+        }
+		
+		#gadgetContent
+        {
+            width: 165px;
+            vertical-align: middle;
+            text-align: center;
+        }
+		#imgBackground
+		{
+			position:relative;
+		}
+		span#location
+		{
+			position:absolute;
+			bottom:0;
+			left:0%;
+		}

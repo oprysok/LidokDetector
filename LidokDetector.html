@@ -1,0 +1,26 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=Unicode" />
+        <title>LidokDetector</title>
+		<link href="css/style.css" rel="stylesheet" type="text/css" />
+        <script type="text/jscript" language="jscript" src="js/json_parser.js"></script>
+		<script type="text/jscript" language="jscript" src="js/ajax.js"></script>
+		<script type="text/jscript" language="jscript" src="js/widget.js"></script>
+    </head>
+    <body id="body" onload="init()">
+        <g:background id="imgBackground">
+            <span id="user">connecting...</span><br/>
+			<span id="location"></span>
+        </g:background>
+    </body>
+	<script type="text/jscript" language="jscript">
+			function init()
+			{//debugger;
+				var widget = new Widget();
+				widget.detect();
+				setInterval( function() { widget.detect(); }, widget.settings.interval);	
+				System.Gadget.settingsUI = "settings.html";
+				System.Gadget.onSettingsClosed = function(event) { widget.settingsClosedHandler(event); } // Delegate for the settings closing event.
+			};
+	</script>
+</html>

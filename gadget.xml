@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<gadget>
+  <name>Detect Lidok</name>
+  <version>1.0.0.2</version>
+  <author name="Pacantre">
+    <logo src="images/logo.png" />
+  </author>
+  <copyright>&#169; E-Pacantre Corporation.</copyright>
+  <description>"Detect Lidok" Sidebar gadget</description>
+  <icons>
+    <icon height="48" width="48" src="images/icon.png" />
+  </icons>
+  <hosts>
+    <host name="sidebar">
+      <base type="HTML" apiVersion="1.0.0" src="LidokDetector.html" />
+      <permissions>Full</permissions>
+      <platform minPlatformVersion="1.0" />
+    </host>
+  </hosts>
+</gadget>
