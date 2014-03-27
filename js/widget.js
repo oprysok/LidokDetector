@@ -33,6 +33,7 @@ function Widget()
 
 Widget.prototype.changeState = function (detected) 
 {
+	//debugger;
 	if (detected)
 	{
 		if(this.lastResult === null || !this.lastResult)
@@ -75,12 +76,11 @@ Widget.prototype.searchSetId = function (employees, that)
 Widget.prototype.checkLidok = function(obj, that) 
 {
 	var res = json_parse(obj);
-	that.tst(res.area);
 	that.currentLocationName = res.area.replace("Office KBP","");
 	that.dom.locationSpan.innerHTML = res.direction == "in" ? "Now in " +  that.currentLocationName : "Last seen in " + that.currentLocationName;
 	that.dom.userSpan.innerHTML = that.settings.firstName + " " + that.settings.lastName;
 	that.dom.whenSpan.innerHTML = !(res.area == that.settings.homeArea && res.direction == "in") ? moment(res.timestamp).fromNow() : "";
-	
+	//debugger;
 	if (res.area == that.settings.homeArea && res.direction == "in")
 	{
 		that.changeState(true);
@@ -119,6 +119,5 @@ Widget.prototype.settingsClosedHandler = function(event)
 };
 
 Widget.prototype.tst = function(text) {
-	this.dom.userSpan.innerHTML = text;
-	this.changeState(false);
+	this.dom.userSpan.innerHTML = text;	
 };
