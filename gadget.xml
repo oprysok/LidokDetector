@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <gadget>
-  <name>Detect Lidok</name>
+  <name>Lidok Detector</name>
   <version>1.0.0.3</version>
   <author name="Pacantre">
     <logo src="images/logo.png" />
