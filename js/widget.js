@@ -65,7 +65,7 @@ Widget.prototype.searchSetId = function (employees, that)
 	}
 	else
 	{
-		that.employeeList = json_parse(employees);
+		that.employeeList = json_parse(employees);		
 		for (var i = 0; i < that.employeeList.length; i++) 
 		{
 			if (that.employeeList[i].last_name == that.settings.lastName && that.employeeList[i].first_name == that.settings.firstName) that.settings.userId = that.employeeList[i].id;
@@ -76,7 +76,7 @@ Widget.prototype.searchSetId = function (employees, that)
 Widget.prototype.checkLidok = function(obj, that) 
 {
 	var res = json_parse(obj);
-	that.currentLocationName = res.area.replace("Office KBP","");
+	that.currentLocationName = res.area.replace("Office KBP","").replace("-", "");
 	that.dom.locationSpan.innerHTML = res.direction == "in" ? "Now in " +  that.currentLocationName : "Last seen in " + that.currentLocationName;
 	that.dom.userSpan.innerHTML = that.settings.firstName + " " + that.settings.lastName;
 	that.dom.whenSpan.innerHTML = !(res.area == that.settings.homeArea && res.direction == "in") ? moment(res.timestamp).fromNow() : "";
