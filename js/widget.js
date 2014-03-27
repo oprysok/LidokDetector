@@ -79,7 +79,7 @@ Widget.prototype.checkLidok = function(obj, that)
 	that.currentLocationName = res.area.replace("Office KBP","").replace("-", "");
 	that.dom.locationSpan.innerHTML = res.direction == "in" ? "Now in " +  that.currentLocationName : "Last seen in " + that.currentLocationName;
 	that.dom.userSpan.innerHTML = that.settings.firstName + " " + that.settings.lastName;
-	that.dom.whenSpan.innerHTML = !(res.area == that.settings.homeArea && res.direction == "in") ? moment(res.timestamp).fromNow() : "";
+	that.dom.whenSpan.innerHTML = res.direction != "in" ? moment(res.timestamp).fromNow() : "";
 	//debugger;
 	if (res.area == that.settings.homeArea && res.direction == "in")
 	{
