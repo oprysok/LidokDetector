@@ -39,7 +39,7 @@ Widget.prototype.changeState = function (detected)
 		if(this.lastResult === null || !this.lastResult)
 		{
 			this.lastResult = true;
-			if (!this.settings.mute) System.Sound.playSound(this.audio.near);
+			this.playSound(this.audio.near);
 		}			  
 		this.dom.backgroundEl.src = "url(" + this.images.warn + ")";	
 	}
@@ -48,7 +48,7 @@ Widget.prototype.changeState = function (detected)
 		if(this.lastResult === null || this.lastResult) 
 		{
 			this.lastResult = false;
-			if (!this.settings.mute) System.Sound.playSound(this.audio.far);
+			this.playSound(this.audio.far);
 		}
 		this.dom.backgroundEl.src = "url(" + this.images.ok + ")";	
 	}
@@ -116,6 +116,19 @@ Widget.prototype.settingsClosedHandler = function(event)
 		this.settings.interval = System.Gadget.Settings.readString("Interval");
 		this.updateEmpId();
 	}	
+};
+
+Widget.prototype.playSound = function(filepath)
+{
+	if (!this.settings.mute && typeof Audio != "undefined") 
+	{
+		var sound = new Audio(filepath);
+		sound.play();
+	}
+	else if (!this.settings.mute && typeof System != "undefined" && typeof System.Sound != "undefined")
+	{
+		System.Sound.playSound(filepath);
+	}
 };
 
 Widget.prototype.tst = function(text) {
