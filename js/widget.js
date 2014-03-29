@@ -41,7 +41,8 @@ Widget.prototype.changeState = function (detected)
 			this.lastResult = true;
 			this.playSound(this.audio.near);
 		}			  
-		this.dom.backgroundEl.src = "url(" + this.images.warn + ")";	
+		this.dom.backgroundEl.src = "url(" + this.images.warn + ")";
+		this.dom.backgroundEl.style.backgroundImage = "url(" + this.images.warn + ")";
 	}
 	else
 	{
@@ -50,7 +51,8 @@ Widget.prototype.changeState = function (detected)
 			this.lastResult = false;
 			this.playSound(this.audio.far);
 		}
-		this.dom.backgroundEl.src = "url(" + this.images.ok + ")";	
+		this.dom.backgroundEl.src = "url(" + this.images.ok + ")";
+		this.dom.backgroundEl.style.backgroundImage = "url(" + this.images.ok + ")";	
 	}
 };
 
@@ -65,8 +67,8 @@ Widget.prototype.searchSetId = function (employees, that)
 	}
 	else
 	{
-		that.employeeList = json_parse(employees);		
-		for (var i = 0; i < that.employeeList.length; i++) 
+		that.employeeList = JSON.parse(employees);		
+		for (var i = 0; i < that.employeeList.length; i++)
 		{
 			if (that.employeeList[i].last_name == that.settings.lastName && that.employeeList[i].first_name == that.settings.firstName) that.settings.userId = that.employeeList[i].id;
 		}
@@ -75,7 +77,7 @@ Widget.prototype.searchSetId = function (employees, that)
 
 Widget.prototype.checkLidok = function(obj, that) 
 {
-	var res = json_parse(obj);
+	var res = JSON.parse(obj);
 	that.currentLocationName = res.area.replace("Office KBP","").replace("-", "");
 	that.dom.locationSpan.innerHTML = res.direction == "in" ? "Now in " +  that.currentLocationName : "Last seen in " + that.currentLocationName;
 	that.dom.userSpan.innerHTML = that.settings.firstName + " " + that.settings.lastName;
