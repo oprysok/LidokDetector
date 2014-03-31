@@ -38,9 +38,9 @@
 				<input id="intervalInput" class="input-text" type="text" value="" onkeyup="return widget.changesMade();"/>
 				<span>Mute:</span><br/>
 				<input id="muteInput" class="input-check" type="checkbox" onclick="return widget.changesMade();"/><br/>
-				<span onclick="return widget.onSaveClick(event, this);" id="saveButton" class="disabled">SAVE</span>
+				<span onclick="return widget.onSaveClick(this);" id="saveButton" class="disabled">SAVE</span>
 			</div>
-			<span id="settingButton" onclick="return widget.onSettingsClick(event, this);" onmouseover="return widget.onCogHover(event, this);" onmouseleave="return widget.onCogOut(event, this);"></span>
+			<span id="settingButton" onclick="return widget.onSettingsClick(event, this);" onmouseover="return widget.onCogHover(this);" onmouseleave="return widget.onCogOut(this);"></span>
         </div>
     </body>
 	<script type="text/jscript" language="jscript">
