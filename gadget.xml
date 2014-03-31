@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <gadget>
-  <name>Lidok Detector</name>
-  <version>1.0.0.3</version>
-  <author name="Pacantre">
+  <name>Where is manager?</name>
+  <version>2.0.0.0</version>
+  <author name="E-Pacantre">
     <logo src="images/logo.png" />
   </author>
   <copyright>&#169; E-Pacantre Corporation.</copyright>
-  <description>"Detect Lidok" Sidebar gadget</description>
+  <description>"Where is manager?" sidebar gadget</description>
   <icons>
     <icon height="48" width="48" src="images/icon.png" />
   </icons>
   <hosts>
     <host name="sidebar">
-      <base type="HTML" apiVersion="1.0.0" src="LidokDetector.html" />
+      <base type="HTML" apiVersion="1.0.0" src="index.html" />
       <permissions>Full</permissions>
       <platform minPlatformVersion="1.0" />
     </host>
