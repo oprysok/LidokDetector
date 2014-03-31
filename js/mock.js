@@ -64,8 +64,8 @@ if (window.System === undefined || System.Gadget === undefined) {
                     {
                         "timestamp": "2014/03/27 20:43:00",
                         "locationid": 95,
-                        "direction": "out",
-                        "area": "Office KBP3-L",
+                        "direction": "in",
+                        "area": "Office KBP4-L",
                         "working": true
                     }
                 )
