@@ -1,6 +1,7 @@
-/*global window, document, Widget:true, moment, ajax, console*/
+/*global window, document, Widget:true, ActiveXObject, moment, ajax, console*/
 function Widget() {
     "use strict";
+    this.configFileName = "config.json";
     this.lastResult = null;
     this.currentLocationName = null;
     this.employeeList = null;
@@ -23,6 +24,8 @@ function Widget() {
         "Office KBP5-R"
     ];
     this.settings = {
+    };
+    this.settingsDefault = {
         "interval": 3000,
         "userId": 2323,
         "name": "Andrii Klymenko",
@@ -89,14 +92,22 @@ Widget.prototype.getEmployees = function () {
 Widget.prototype.checkLidok = function (obj, that) {
     "use strict";
     var res = JSON.parse(obj);
-    that.currentLocationName = res.area.replace("Office KBP", "").replace("-", "");
-    that.dom.locationSpan.innerHTML = res.direction === "in" ? "Now in " +  that.currentLocationName : "Last seen in " + that.currentLocationName;
-    that.dom.userSpan.innerHTML = that.settings.name;
-    that.dom.whenSpan.innerHTML = res.direction !== "in" ? "(" + moment(res.timestamp).fromNow() + ")" : "";
-    if (res.area === that.settings.homeArea && res.direction === "in") {
-        that.changeState(true);
+    if (res.area !== null && res.working !== false) {
+        that.currentLocationName = res.area.replace("Office KBP", "").replace("-", "");
+        that.dom.locationSpan.innerHTML = res.direction === "in" ? "Now in " +  that.currentLocationName : "Last seen in " + that.currentLocationName;
+        that.dom.userSpan.innerHTML = that.settings.name;
+        that.dom.whenSpan.innerHTML = res.direction !== "in" ? "(" + moment(res.timestamp).fromNow() + ")" : "";
+        if (res.area === that.settings.homeArea && res.direction === "in") {
+            that.changeState(true);
+        } else {
+            that.changeState(false);
+        }
     } else {
-        that.changeState(false);
+        that.dom.userSpan.innerHTML = "";
+        that.dom.whenSpan.innerHTML = "";
+        that.dom.locationSpan.innerHTML = "";
+        that.dom.statusSpan.innerHTML = "Not available";
+        this.removeConfig();
     }
 };
 Widget.prototype.detect = function () {
@@ -158,6 +169,69 @@ Widget.prototype.saveSettings = function () {
     }
     this.settings.mute = this.dom.muteInput.checked;
     this.closeSuggestions();
+};
+Widget.prototype.mergeSettings = function (obj1, obj2) {
+    "use strict";
+    var p;
+    for (p in obj2) {
+        if (obj2.hasOwnProperty(p)) {
+            try {
+                if (obj2[p].constructor === Object) {
+                    obj1[p] = this.mergeSettings(obj1[p], obj2[p]);
+                } else {
+                    obj1[p] = obj2[p];
+                }
+            } catch (e) {
+                obj1[p] = obj2[p];
+            }
+        }
+    }
+    return obj1;
+};
+Widget.prototype.saveConfig = function () {
+    "use strict";
+    var filespec, fso, a;
+    if (window.ActiveXObject !== undefined && System.Gadget !== undefined) {
+        filespec = System.Gadget.path + "\\" + this.configFileName;
+        fso = new ActiveXObject("Scripting.FileSystemObject");
+        if (fso.FileExists(filespec)) {
+            fso.DeleteFile(filespec);
+        }
+        fso.CreateTextFile(filespec, true);
+        a = fso.CreateTextFile(filespec, true);
+        a.WriteLine(JSON.stringify(this.settings));
+    }
+};
+Widget.prototype.readConfig = function () {
+    "use strict";
+    var filespec, fso, f, configObj, fileContent;
+    if (window.ActiveXObject !== undefined && System.Gadget !== undefined) {
+        filespec = System.Gadget.path + "\\" + this.configFileName;
+        fso = new ActiveXObject("Scripting.FileSystemObject");
+        if (fso.FileExists(filespec)) {
+            f = fso.OpenTextFile(filespec, 1);
+            fileContent = f.ReadAll();
+            try {
+                configObj = JSON.parse(fileContent);
+                this.settings = this.mergeSettings(this.settingsDefault, configObj);
+            } catch (e) {
+                this.settings = this.settingsDefault;
+            }
+        } else {
+            this.settings = this.settingsDefault;
+        }
+    }
+};
+Widget.prototype.removeConfig = function () {
+    "use strict";
+    var filespec, fso;
+    if (window.ActiveXObject !== undefined && System.Gadget !== undefined) {
+        filespec = System.Gadget.path + "\\" + this.configFileName;
+        fso = new ActiveXObject("Scripting.FileSystemObject");
+        if (fso.FileExists(filespec)) {
+            fso.DeleteFile(filespec);
+        }
+    }
 };
 //Event handlers
 Widget.prototype.autocompleteHandler = function (event, that) {
@@ -234,6 +308,7 @@ Widget.prototype.onSaveClick = function (that) {
     "use strict";
     if (that.className !== "disabled") {
         this.saveSettings();
+        this.saveConfig();
         this.closeSettings();
         this.dom.saveSpan.className = "disabled";
     }

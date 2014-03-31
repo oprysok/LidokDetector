@@ -1,9 +1,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=Unicode" />
-        <title>LidokDetector</title>
+        <title>ManagerDetector</title>
 		<link href="css/style.css" rel="stylesheet" type="text/css" />
         <script type="text/jscript" language="jscript" src="js/json2.js"></script>
+        <script type="text/jscript" language="jscript" src="js/base64.js"></script>
 		<script type="text/jscript" language="jscript" src="js/ajax.js"></script>
 		<script type="text/jscript" language="jscript" src="js/widget.js"></script>
 		<script type="text/jscript" language="jscript" src="js/moment.min.js"></script>
@@ -44,12 +45,13 @@
         </div>
     </body>
 	<script type="text/jscript" language="jscript">
-			function init()
-			{//debugger;
-				widget = new Widget();
-				widget.getEmployees();
-				widget.detect();
-				setInterval( function() { widget.detect(); }, widget.settings.interval);
-			};
+	    function init()
+	    {
+	        widget = new Widget();
+	        widget.readConfig();
+	        widget.getEmployees();
+	        widget.detect();
+	        setInterval( function() { widget.detect(); }, widget.settings.interval);
+	    };
 	</script>
 </html>
