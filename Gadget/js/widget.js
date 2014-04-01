@@ -188,6 +188,11 @@ Widget.prototype.mergeSettings = function (obj1, obj2) {
     }
     return obj1;
 };
+Widget.prototype.applyConfig = function () {
+    "use strict";
+    this.dom.employeesInputId.setAttribute("data-name", this.settings.name);
+    this.dom.employeesInputId.value = this.settings.userId;
+};
 Widget.prototype.saveConfig = function () {
     "use strict";
     var filespec, fso, a;
@@ -204,21 +209,16 @@ Widget.prototype.saveConfig = function () {
 };
 Widget.prototype.readConfig = function () {
     "use strict";
-    var filespec, fso, f;
-    if (window.ActiveXObject !== undefined && System.Gadget !== undefined) {
+    try {
+        var filespec, fso, f;
         filespec = System.Gadget.path + "\\" + this.configFileName;
         fso = new ActiveXObject("Scripting.FileSystemObject");
-        if (fso.FileExists(filespec)) {
-            f = fso.OpenTextFile(filespec, 1).ReadAll();
-            try {
-                this.settings = this.mergeSettings(this.settingsDefault, JSON.parse(f));
-                return;
-            } catch (e) {
-                this.settings = this.settingsDefault;
-            }
-        }
+        f = fso.OpenTextFile(filespec, 1).ReadAll();
+        this.settings = this.mergeSettings(this.settingsDefault, JSON.parse(f));
+    } catch (e) {
+        this.settings = this.settingsDefault;
+        this.applyConfig();
     }
-    this.settings = this.settingsDefault;
 };
 Widget.prototype.removeConfig = function () {
     "use strict";
