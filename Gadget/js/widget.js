@@ -23,8 +23,7 @@ function Widget() {
         "Office KBP5-L",
         "Office KBP5-R"
     ];
-    this.settings = {
-    };
+    this.settings = {};
     this.settingsDefault = {
         "interval": 3000,
         "userId": 2323,
