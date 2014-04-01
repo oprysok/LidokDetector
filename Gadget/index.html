@@ -4,6 +4,7 @@
         <title>ManagerDetector</title>
         <link href="css/style.css" rel="stylesheet" type="text/css" />
         <script type="text/jscript" language="jscript" src="js/json2.js"></script>
+        <script type="text/jscript" language="jscript" src="js/ie.js"></script>
         <script type="text/jscript" language="jscript" src="js/ajax.js"></script>
         <script type="text/jscript" language="jscript" src="js/widget.js"></script>
         <script type="text/jscript" language="jscript" src="js/moment.min.js"></script>
@@ -22,18 +23,18 @@
             </div>
             <div id="settings">
                 <span>Name:</span>
-                <input id="employees" class="input-text" type="text" value="" onkeyup="return widget.onNameChange(event,this);" />
+                <input id="employees" class="input-text" type="text" value="" onkeyup="return widget.onNameChange(event, this);" />
                 <input id="empId" type="text" value="0"></input><br/>
                 <div style="position:relative;width:140px;">
-                    <div id="found"></div>
+                    <div id="foundEmps" class="suggestions"></div>
                 </div>
                 <span>Nickname:</span>
                 <input id="aliasInput" class="input-text" type="text" value="" onkeyup="return widget.changesMade();"/>
                 <span>Home area:</span>
-                <input id="areaInput" class="input-text" type="text" value="" onkeyup="return widget.changesMade();"/>
-                <!--div style="position:relative;width:140px;">
-                    <div id="foundArea"></div>
-                </div-->
+                <input id="areaInput" class="input-text" type="text" value="" onkeyup="return widget.onAreaChange(event, this);"/>
+                <div style="position:relative;width:140px;">
+                    <div id="foundArea" class="suggestions"></div>
+                </div>
                 <span>Request interval (ms):</span>
                 <input id="intervalInput" class="input-text" type="text" value="" onkeyup="return widget.changesMade();"/>
                 <span>Mute:</span><br/>

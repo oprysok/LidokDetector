@@ -102,7 +102,7 @@ div#settings
     margin-bottom:-15px;
     cursor: pointer;
 }
-#found {
+.suggestions {
     border-right: 2px solid #996600;
     border-bottom: 2px solid #996600;
     font-family: 'Lato', sans-serif;

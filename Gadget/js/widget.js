@@ -44,11 +44,11 @@ function Widget() {
         employeesInputAc: document.getElementById("employees"),
         employeesInputId: document.getElementById("empId"),
         intervalInput: document.getElementById("intervalInput"),
-        areaInput: document.getElementById("areaInput"),
-        areasSuggestions: document.getElementById("foundArea"),
         aliasInput: document.getElementById("aliasInput"),
         muteInput: document.getElementById("muteInput"),
-        employeesSuggestions: document.getElementById("found")
+        employeesSuggestions: document.getElementById("foundEmps"),
+        areaInput: document.getElementById("areaInput"),
+        areasSuggestions: document.getElementById("foundArea")
     };
     this.audio = {
         near: "sounds\\e-pacantre.wav",
@@ -133,6 +133,17 @@ Widget.prototype.showNameSuggestions = function () {
     this.dom.employeesInputAc.style.borderRight = "2px solid #996600";
     this.dom.employeesSuggestions.style.display = "block";
 };
+Widget.prototype.hideAreaSuggestions = function () {
+    "use strict";
+    this.dom.areaInput.style.border = "";
+    this.dom.areasSuggestions.style.display = "none";
+    this.dom.areasSuggestions.innerHTML = "";
+};
+Widget.prototype.showAreaSuggestions = function () {
+    "use strict";
+    this.dom.areaInput.style.borderRight = "2px solid #996600";
+    this.dom.areasSuggestions.style.display = "block";
+};
 Widget.prototype.closeSettings = function () {
     "use strict";
     document.body.setAttribute("data-showSettings", "false");
@@ -162,7 +173,7 @@ Widget.prototype.saveSettings = function () {
         this.settings.userId = parseInt(this.dom.employeesInputId.value, 10);
     }
     this.settings.alias = this.dom.aliasInput.value;
-    this.settings.homeArea = this.dom.areaInput.value;
+    this.settings.homeArea = this.areaList.indexOf(this.dom.areaInput.value) === -1 ? this.settings.homeArea : this.dom.areaInput.value;
     if (!isNaN(this.dom.intervalInput.value)) {
         this.settings.interval = parseInt(this.dom.intervalInput.value, 10);
     }
@@ -269,12 +280,46 @@ Widget.prototype.onNameChange = function (event, that) {
     }
     this.changesMade();
 };
+Widget.prototype.onAreaChange = function (event, that) {
+    "use strict";
+    var keyCode, str, found, i, name;
+    keyCode = (event !== undefined) ? event.which : event.keyCode;
+    if (keyCode === 27) {
+        this.hideAreaSuggestions();
+    } else {
+        str = that.value.toLowerCase().replace(/^\s+|\s+$/g, "").replace("-", ""); // replace is used to trim string. String.trim() in old ie not supported
+        if (str !== '' && str.length > 0) {
+            this.dom.areasSuggestions.innerHTML = "";
+            for (i = 0; i < this.areaList.length; i += 1) {
+                name = this.areaList[i];
+                found = name.toLowerCase().replace("-", "").indexOf(str) !== -1 ? true : false;
+                if (found) {
+                    this.dom.areasSuggestions.innerHTML += "<div onmouseleave=\"return widget.onSuggestionOut(this);\" onmouseover=\"return widget.onSuggestionHover(this);\" onclick=\"return widget.onClickAreaSuggestion('" + this.areaList[i] + "');\" class=\"suggestion\">" + this.areaList[i] + "</div><br/>";
+                }
+            }
+            if (this.dom.areasSuggestions.innerHTML !== "") {
+                this.showAreaSuggestions();
+            } else {
+                this.hideAreaSuggestions();
+            }
+        } else {
+            this.hideAreaSuggestions();
+        }
+    }
+    this.changesMade();
+};
 Widget.prototype.onClickNameSuggestion = function (that, id, name) {
     "use strict";
     this.dom.employeesInputId.value = parseInt(id, 10);
     this.dom.employeesInputId.setAttribute("data-name", name);
     this.dom.employeesInputAc.value = that.innerHTML;
     this.hideNameSuggestions();
+    this.changesMade();
+};
+Widget.prototype.onClickAreaSuggestion = function (name) {
+    "use strict";
+    this.dom.areaInput.value = name;
+    this.hideAreaSuggestions();
     this.changesMade();
 };
 Widget.prototype.onCogHover = function (that) {
