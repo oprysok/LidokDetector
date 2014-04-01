@@ -122,13 +122,13 @@ Widget.prototype.playSound = function (filepath) {
         System.Sound.playSound(filepath);
     }
 };
-Widget.prototype.closeSuggestions = function () {
+Widget.prototype.hideNameSuggestions = function () {
     "use strict";
     this.dom.employeesInputAc.style.border = "";
     this.dom.employeesSuggestions.style.display = "none";
     this.dom.employeesSuggestions.innerHTML = "";
 };
-Widget.prototype.openSuggestions = function () {
+Widget.prototype.showNameSuggestions = function () {
     "use strict";
     this.dom.employeesInputAc.style.borderRight = "2px solid #996600";
     this.dom.employeesSuggestions.style.display = "block";
@@ -167,7 +167,7 @@ Widget.prototype.saveSettings = function () {
         this.settings.interval = parseInt(this.dom.intervalInput.value, 10);
     }
     this.settings.mute = this.dom.muteInput.checked;
-    this.closeSuggestions();
+    this.hideNameSuggestions();
 };
 Widget.prototype.mergeSettings = function (obj1, obj2) {
     "use strict";
@@ -231,12 +231,12 @@ Widget.prototype.removeConfig = function () {
     }
 };
 //Event handlers
-Widget.prototype.autocompleteHandler = function (event, that) {
+Widget.prototype.onNameChange = function (event, that) {
     "use strict";
     var keyCode, str, found, i, y, lName, fName, charCount;
     keyCode = (event !== undefined) ? event.which : event.keyCode;
     if (keyCode === 27) {
-        this.closeSuggestions();
+        this.hideNameSuggestions();
     } else {
         charCount = that.value.toLowerCase().length;
         str = that.value.toLowerCase().replace(/^\s+|\s+$/g, "").split(" "); // replace is used to trim string. String.trim() in old ie not supported
@@ -255,26 +255,26 @@ Widget.prototype.autocompleteHandler = function (event, that) {
                     }
                 }
                 if (found) {
-                    this.dom.employeesSuggestions.innerHTML += "<div onmouseleave=\"return widget.onSuggestionOut(this);\" onmouseover=\"return widget.onSuggestionHover(this);\" onclick=\"return widget.suggestionClickHandler(this, " + this.employeeList[i].id + ", '" + this.employeeList[i].first_name + " " + this.employeeList[i].last_name + "');\" class=\"suggestion\" data-id=\"" + this.employeeList[i].id  + "\">" + this.employeeList[i].first_name + " " + this.employeeList[i].last_name + "</div><br/>";
+                    this.dom.employeesSuggestions.innerHTML += "<div onmouseleave=\"return widget.onSuggestionOut(this);\" onmouseover=\"return widget.onSuggestionHover(this);\" onclick=\"return widget.onClickNameSuggestion(this, " + this.employeeList[i].id + ", '" + this.employeeList[i].first_name + " " + this.employeeList[i].last_name + "');\" class=\"suggestion\" data-id=\"" + this.employeeList[i].id  + "\">" + this.employeeList[i].first_name + " " + this.employeeList[i].last_name + "</div><br/>";
                 }
             }
             if (this.dom.employeesSuggestions.innerHTML !== "") {
-                this.openSuggestions();
+                this.showNameSuggestions();
             } else {
-                this.closeSuggestions();
+                this.hideNameSuggestions();
             }
         } else {
-            this.closeSuggestions();
+            this.hideNameSuggestions();
         }
     }
     this.changesMade();
 };
-Widget.prototype.suggestionClickHandler = function (that, id, name) {
+Widget.prototype.onClickNameSuggestion = function (that, id, name) {
     "use strict";
     this.dom.employeesInputId.value = parseInt(id, 10);
     this.dom.employeesInputId.setAttribute("data-name", name);
     this.dom.employeesInputAc.value = that.innerHTML;
-    this.closeSuggestions();
+    this.hideNameSuggestions();
     this.changesMade();
 };
 Widget.prototype.onCogHover = function (that) {
