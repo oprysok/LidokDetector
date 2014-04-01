@@ -204,23 +204,21 @@ Widget.prototype.saveConfig = function () {
 };
 Widget.prototype.readConfig = function () {
     "use strict";
-    var filespec, fso, f, configObj, fileContent;
+    var filespec, fso, f;
     if (window.ActiveXObject !== undefined && System.Gadget !== undefined) {
         filespec = System.Gadget.path + "\\" + this.configFileName;
         fso = new ActiveXObject("Scripting.FileSystemObject");
         if (fso.FileExists(filespec)) {
-            f = fso.OpenTextFile(filespec, 1);
-            fileContent = f.ReadAll();
+            f = fso.OpenTextFile(filespec, 1).ReadAll();
             try {
-                configObj = JSON.parse(fileContent);
-                this.settings = this.mergeSettings(this.settingsDefault, configObj);
+                this.settings = this.mergeSettings(this.settingsDefault, JSON.parse(f));
+                return;
             } catch (e) {
                 this.settings = this.settingsDefault;
             }
-        } else {
-            this.settings = this.settingsDefault;
         }
     }
+    this.settings = this.settingsDefault;
 };
 Widget.prototype.removeConfig = function () {
     "use strict";
