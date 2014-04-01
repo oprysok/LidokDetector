@@ -2,56 +2,55 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=Unicode" />
         <title>ManagerDetector</title>
-		<link href="css/style.css" rel="stylesheet" type="text/css" />
+        <link href="css/style.css" rel="stylesheet" type="text/css" />
         <script type="text/jscript" language="jscript" src="js/json2.js"></script>
-        <script type="text/jscript" language="jscript" src="js/base64.js"></script>
-		<script type="text/jscript" language="jscript" src="js/ajax.js"></script>
-		<script type="text/jscript" language="jscript" src="js/widget.js"></script>
-		<script type="text/jscript" language="jscript" src="js/moment.min.js"></script>
-		<script type="text/jscript" language="jscript" src="js/mockXHR.js"></script>
-		<script type="text/jscript" language="jscript" src="js/mock.js"></script>
+        <script type="text/jscript" language="jscript" src="js/ajax.js"></script>
+        <script type="text/jscript" language="jscript" src="js/widget.js"></script>
+        <script type="text/jscript" language="jscript" src="js/moment.min.js"></script>
+        <script type="text/jscript" language="jscript" src="js/mockXHR.js"></script>
+        <script type="text/jscript" language="jscript" src="js/mock.js"></script>
     </head>
     <body id="body" onload="init()" data-showSettings="false">
         <div id="imgBackground">
-        	<div id="main">
-	            <span id="user">connecting...</span><br/>
-				<div id="locationWhen">
-					<span id="location"></span>&nbsp;<span id="when"></span><br/>
-					<span id="status"></span>
-				</div>
-				<br/>
-			</div>
-			<div id="settings">
-				<span>Name:</span>
-				<input id="employees" class="input-text" type="text" value="" onkeyup="return widget.autocompleteHandler(event,this);" />
-				<input id="empId" type="text" value="0"></input><br/>
-				<div style="position:relative;width:140px;">
-					<div id="found"></div>
-				</div>
-				<span>Nickname:</span>
-				<input id="aliasInput" class="input-text" type="text" value="" onkeyup="return widget.changesMade();"/>
-				<span>Home area:</span>
-				<input id="areaInput" class="input-text" type="text" value=""/>
-				<!--div style="position:relative;width:140px;">
-					<div id="foundArea"></div>
-				</div-->
-				<span>Request interval (ms):</span>
-				<input id="intervalInput" class="input-text" type="text" value="" onkeyup="return widget.changesMade();"/>
-				<span>Mute:</span><br/>
-				<input id="muteInput" class="input-check" type="checkbox" onclick="return widget.changesMade();"/><br/>
-				<span onclick="return widget.onSaveClick(this);" id="saveButton" class="disabled">SAVE</span>
-			</div>
-			<span id="settingButton" onclick="return widget.onSettingsClick(event, this);" onmouseover="return widget.onCogHover(this);" onmouseleave="return widget.onCogOut(this);"></span>
+            <div id="main">
+                <span id="user">connecting...</span><br/>
+                <div id="locationWhen">
+                    <span id="location"></span>&nbsp;<span id="when"></span><br/>
+                    <span id="status"></span>
+                </div>
+                <br/>
+            </div>
+            <div id="settings">
+                <span>Name:</span>
+                <input id="employees" class="input-text" type="text" value="" onkeyup="return widget.autocompleteHandler(event,this);" />
+                <input id="empId" type="text" value="0"></input><br/>
+                <div style="position:relative;width:140px;">
+                    <div id="found"></div>
+                </div>
+                <span>Nickname:</span>
+                <input id="aliasInput" class="input-text" type="text" value="" onkeyup="return widget.changesMade();"/>
+                <span>Home area:</span>
+                <input id="areaInput" class="input-text" type="text" value=""/>
+                <!--div style="position:relative;width:140px;">
+                    <div id="foundArea"></div>
+                </div-->
+                <span>Request interval (ms):</span>
+                <input id="intervalInput" class="input-text" type="text" value="" onkeyup="return widget.changesMade();"/>
+                <span>Mute:</span><br/>
+                <input id="muteInput" class="input-check" type="checkbox" onclick="return widget.changesMade();"/><br/>
+                <span onclick="return widget.onSaveClick(this);" id="saveButton" class="disabled">SAVE</span>
+            </div>
+            <span id="settingButton" onclick="return widget.onSettingsClick(event, this);" onmouseover="return widget.onCogHover(this);" onmouseleave="return widget.onCogOut(this);"></span>
         </div>
     </body>
-	<script type="text/jscript" language="jscript">
-	    function init()
-	    {
-	        widget = new Widget();
-	        widget.readConfig();
-	        widget.getEmployees();
-	        widget.detect();
-	        setInterval( function() { widget.detect(); }, widget.settings.interval);
-	    };
-	</script>
+    <script type="text/jscript" language="jscript">
+        function init()
+        {
+            widget = new Widget();
+            widget.readConfig();
+            widget.getEmployees();
+            widget.detect();
+            setInterval( function() { widget.detect(); }, widget.settings.interval);
+        };
+    </script>
 </html>
