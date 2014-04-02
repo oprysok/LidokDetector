@@ -30,7 +30,7 @@ function Widget() {
         "name": "Andrii Klymenko",
         "alias": "Lidok",
         "homeArea": "Office KBP3-L",
-        "mute": false
+        "mute": true
     };
     this.dom = {
         userSpan: document.getElementById("user"),
@@ -241,44 +241,148 @@ Widget.prototype.removeConfig = function () {
         }
     }
 };
-//Event handlers
-Widget.prototype.onNameChange = function (event, that) {
+// Name Autocomplete
+Widget.prototype.nextNameSuggestion = function () {
     "use strict";
-    var keyCode, str, found, i, y, lName, fName, charCount;
-    keyCode = (event !== undefined) ? event.which : event.keyCode;
-    if (keyCode === 27) {
-        this.hideNameSuggestions();
-    } else {
-        charCount = that.value.toLowerCase().length;
-        str = that.value.toLowerCase().trim().split(" ");
-        if (str[0] !== '' && charCount > 3) {
-            this.dom.employeesSuggestions.innerHTML = "";
-            for (i = 0; i < this.employeeList.length; i += 1) {
-                lName = this.employeeList[i].last_name !== null ? this.employeeList[i].last_name.toLowerCase() : "empty";
-                fName = this.employeeList[i].first_name !== null ? this.employeeList[i].first_name.toLowerCase() : "empty";
-                found = true;
-                for (y = 0; y < str.length; y += 1) {
-                    if (lName.indexOf(str[y]) !== -1 || fName.indexOf(str[y]) !== -1) {
-                        found = true;
-                    } else {
-                        found = false;
-                        break;
-                    }
+    if (this.dom.employeesSuggestions.innerHTML !== "") {
+        var activeIndex, firstIndex, lastIndex, node, currentIndex, next, x;
+        activeIndex = firstIndex = lastIndex = -1;
+        for (x = 0; x < this.dom.employeesSuggestions.childNodes.length; x += 1) {
+            node = this.dom.employeesSuggestions.childNodes[x];
+            lastIndex = node.nodeType === 1 ? x : lastIndex;
+            if (firstIndex === -1 && node.nodeType === 1) {
+                firstIndex = x;
+            }
+            if (node.className.indexOf("active") !== -1) {
+                activeIndex = x;
+            }
+        }
+        if (activeIndex !== -1) {
+            currentIndex = activeIndex;
+            next = this.dom.employeesSuggestions.childNodes[activeIndex];
+            next.className = "suggestion";
+            do {
+                if (lastIndex === currentIndex) {
+                    next = this.dom.employeesSuggestions.childNodes[firstIndex];
+                } else {
+                    next = next.nextSibling;
                 }
-                if (found) {
-                    this.dom.employeesSuggestions.innerHTML += "<div onmouseleave=\"return widget.onSuggestionOut(this);\" onmouseover=\"return widget.onSuggestionHover(this);\" onmousedown=\"return widget.onClickNameSuggestion(this, " + this.employeeList[i].id + ", '" + this.employeeList[i].first_name + " " + this.employeeList[i].last_name + "');\" class=\"suggestion\" data-id=\"" + this.employeeList[i].id  + "\">" + this.employeeList[i].first_name + " " + this.employeeList[i].last_name + "</div><br/>";
+                currentIndex += 1;
+            } while (next.className !== "suggestion");
+            next.className = "suggestion active";
+        } else {
+            this.dom.employeesSuggestions.childNodes[firstIndex].className = "suggestion active";
+        }
+    }
+};
+Widget.prototype.prevNameSuggestion = function (event) {
+    "use strict";
+    var activeIndex, firstIndex, lastIndex, node, x, currentIndex, prev;
+    if (this.dom.employeesSuggestions.innerHTML !== "") {
+        event.preventDefault();
+        activeIndex = firstIndex = lastIndex = -1;
+        for (x = 0; x < this.dom.employeesSuggestions.childNodes.length; x += 1) {
+            node = this.dom.employeesSuggestions.childNodes[x];
+            lastIndex = node.nodeType === 1 ? x : lastIndex;
+            if (firstIndex === -1 && node.nodeType === 1) {
+                firstIndex = x;
+            }
+            if (node.className.indexOf("active") !== -1) {
+                activeIndex = x;
+            }
+        }
+        if (activeIndex !== -1) {
+            currentIndex = activeIndex;
+            prev = this.dom.employeesSuggestions.childNodes[activeIndex];
+            prev.className = "suggestion";
+            do {
+                if (firstIndex !== currentIndex) {
+                    prev = prev.previousSibling;
+                } else {
+                    prev = this.dom.employeesSuggestions.childNodes[lastIndex];
+                }
+                currentIndex -= 1;
+            } while (prev.className !== "suggestion");
+            prev.className = "suggestion active";
+        } else {
+            this.dom.employeesSuggestions.childNodes[lastIndex].className = "suggestion active";
+        }
+    }
+};
+Widget.prototype.getActiveNameSuggestion = function () {
+    "use strict";
+    var node, x;
+    if (this.dom.employeesSuggestions.innerHTML !== "") {
+        for (x = 0; x < this.dom.employeesSuggestions.childNodes.length; x += 1) {
+            node = this.dom.employeesSuggestions.childNodes[x];
+            if (node.className.indexOf("active") !== -1 && node.nodeType === 1) {
+                return node;
+            }
+        }
+    }
+    return;
+};
+Widget.prototype.findNameSuggestions = function (inputEl) {
+    "use strict";
+    var str, found, i, y, lName, fName, charCount;
+    charCount = inputEl.value.toLowerCase().length;
+    str = inputEl.value.toLowerCase().trim().split(" ");
+    if (str[0] !== '' && charCount > 3) {
+        this.dom.employeesSuggestions.innerHTML = "";
+        for (i = 0; i < this.employeeList.length; i += 1) {
+            lName = this.employeeList[i].last_name !== null ? this.employeeList[i].last_name.toLowerCase() : "empty";
+            fName = this.employeeList[i].first_name !== null ? this.employeeList[i].first_name.toLowerCase() : "empty";
+            found = true;
+            for (y = 0; y < str.length; y += 1) {
+                if (lName.indexOf(str[y]) !== -1 || fName.indexOf(str[y]) !== -1) {
+                    found = true;
+                } else {
+                    found = false;
+                    break;
                 }
             }
-            if (this.dom.employeesSuggestions.innerHTML !== "") {
-                this.showNameSuggestions();
-            } else {
-                this.hideNameSuggestions();
+            if (found) {
+                this.dom.employeesSuggestions.innerHTML += "<div onmouseleave=\"return widget.onSuggestionOut(this);\" onmouseover=\"return widget.onSuggestionHover(this);\" onmousedown=\"return widget.onClickNameSuggestion(this, " + this.employeeList[i].id + ", '" + this.employeeList[i].first_name + " " + this.employeeList[i].last_name + "');\" class=\"suggestion\" data-id=\"" + this.employeeList[i].id  + "\">" + this.employeeList[i].first_name + " " + this.employeeList[i].last_name + "</div><br/>";
             }
+        }
+        if (this.dom.employeesSuggestions.innerHTML !== "") {
+            this.showNameSuggestions();
         } else {
             this.hideNameSuggestions();
         }
+    } else {
+        this.hideNameSuggestions();
     }
-    this.changesMade();
+};
+//Event handlers
+Widget.prototype.onNameUp = function (event, that) {
+    "use strict";
+    var keyCode = (event !== undefined) ? event.which : event.keyCode;
+    if (keyCode !== 27 && keyCode !== 13 && keyCode !== 38 && keyCode !== 37 && keyCode !== 39 && keyCode !== 40) {
+        this.findNameSuggestions(that);
+    }
+};
+Widget.prototype.onNameDown = function (event, that) {
+    "use strict";
+    var keyCode, activeEl;
+    keyCode = (event !== undefined) ? event.which : event.keyCode;
+    if (keyCode === 27) {
+        this.hideNameSuggestions();
+    } else if (keyCode === 13) {
+        activeEl = this.getActiveNameSuggestion();
+        if (activeEl !== undefined) {
+            activeEl.onmousedown();
+        }
+    } else if (keyCode === 40) {
+        if (this.dom.employeesSuggestions.innerHTML === "") {
+            this.findNameSuggestions(that);
+        } else {
+            event.preventDefault();
+            this.nextNameSuggestion();
+        }
+    } else if (keyCode === 38) {
+        this.prevNameSuggestion(event);
+    }
 };
 Widget.prototype.onAreaChange = function (event, that) {
     "use strict";

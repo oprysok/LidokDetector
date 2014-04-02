@@ -23,7 +23,7 @@
             </div>
             <div id="settings">
                 <span>Name:</span>
-                <input id="employees" class="input-text" type="text" value="" onkeyup="return widget.onNameChange(event, this);" onblur="return widget.hideNameSuggestions();" />
+                <input id="employees" class="input-text" type="text" value="" onkeyup="return widget.onNameUp(event,this);" onkeydown="return widget.onNameDown(event, this);" onblur="return widget.hideNameSuggestions();" />
                 <input id="empId" type="text" value="0"></input><br/>
                 <div style="position:relative;width:140px;">
                     <div id="foundEmps" class="suggestions"></div>
