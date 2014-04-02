@@ -266,7 +266,7 @@ Widget.prototype.onNameChange = function (event, that) {
                     }
                 }
                 if (found) {
-                    this.dom.employeesSuggestions.innerHTML += "<div onmouseleave=\"return widget.onSuggestionOut(this);\" onmouseover=\"return widget.onSuggestionHover(this);\" onclick=\"return widget.onClickNameSuggestion(this, " + this.employeeList[i].id + ", '" + this.employeeList[i].first_name + " " + this.employeeList[i].last_name + "');\" class=\"suggestion\" data-id=\"" + this.employeeList[i].id  + "\">" + this.employeeList[i].first_name + " " + this.employeeList[i].last_name + "</div><br/>";
+                    this.dom.employeesSuggestions.innerHTML += "<div onmouseleave=\"return widget.onSuggestionOut(this);\" onmouseover=\"return widget.onSuggestionHover(this);\" onmousedown=\"return widget.onClickNameSuggestion(this, " + this.employeeList[i].id + ", '" + this.employeeList[i].first_name + " " + this.employeeList[i].last_name + "');\" class=\"suggestion\" data-id=\"" + this.employeeList[i].id  + "\">" + this.employeeList[i].first_name + " " + this.employeeList[i].last_name + "</div><br/>";
                 }
             }
             if (this.dom.employeesSuggestions.innerHTML !== "") {
@@ -294,7 +294,7 @@ Widget.prototype.onAreaChange = function (event, that) {
                 name = this.areaList[i];
                 found = name.toLowerCase().replace("-", "").indexOf(str) !== -1 ? true : false;
                 if (found) {
-                    this.dom.areasSuggestions.innerHTML += "<div onmouseleave=\"return widget.onSuggestionOut(this);\" onmouseover=\"return widget.onSuggestionHover(this);\" onclick=\"return widget.onClickAreaSuggestion('" + this.areaList[i] + "');\" class=\"suggestion\">" + this.areaList[i] + "</div><br/>";
+                    this.dom.areasSuggestions.innerHTML += "<div onmouseleave=\"return widget.onSuggestionOut(this);\" onmouseover=\"return widget.onSuggestionHover(this);\" onmousedown=\"return widget.onClickAreaSuggestion('" + this.areaList[i] + "');\" class=\"suggestion\">" + this.areaList[i] + "</div><br/>";
                 }
             }
             if (this.dom.areasSuggestions.innerHTML !== "") {
