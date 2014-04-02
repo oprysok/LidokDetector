@@ -4,7 +4,7 @@ using System.ServiceModel.Web;
 namespace MdService
 {
     [ServiceContract]
-    interface IManagerDetector
+    public interface IManagerDetector
     {
         [OperationContract]
         [WebGet(UriTemplate = "Settings/{userId}", ResponseFormat = WebMessageFormat.Json)]
@@ -16,7 +16,7 @@ namespace MdService
            ResponseFormat =  WebMessageFormat.Json,
            Method = "POST",
            UriTemplate = "Settings/{userId}",
-             BodyStyle = WebMessageBodyStyle.Bare)]
+           BodyStyle = WebMessageBodyStyle.Bare)]
         void SaveUserSettings(string userId, string settings);
     }
 }
