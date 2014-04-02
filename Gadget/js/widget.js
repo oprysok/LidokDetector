@@ -250,7 +250,7 @@ Widget.prototype.onNameChange = function (event, that) {
         this.hideNameSuggestions();
     } else {
         charCount = that.value.toLowerCase().length;
-        str = that.value.toLowerCase().replace(/^\s+|\s+$/g, "").split(" "); // replace is used to trim string. String.trim() in old ie not supported
+        str = that.value.toLowerCase().trim().split(" ");
         if (str[0] !== '' && charCount > 3) {
             this.dom.employeesSuggestions.innerHTML = "";
             for (i = 0; i < this.employeeList.length; i += 1) {
@@ -287,7 +287,7 @@ Widget.prototype.onAreaChange = function (event, that) {
     if (keyCode === 27) {
         this.hideAreaSuggestions();
     } else {
-        str = that.value.toLowerCase().replace(/^\s+|\s+$/g, "").replace("-", ""); // replace is used to trim string. String.trim() in old ie not supported
+        str = that.value.toLowerCase().trim().replace("-", "");
         if (str !== '' && str.length > 0) {
             this.dom.areasSuggestions.innerHTML = "";
             for (i = 0; i < this.areaList.length; i += 1) {
