@@ -22,20 +22,20 @@
                 <br/>
             </div>
             <div id="settings">
-                <span>Name:</span>
-                <input id="employees" class="input-text" type="text" value="" onkeyup="return widget.onNameUp(event,this);" onkeydown="return widget.onNameDown(event, this);" onblur="return widget.hideNameSuggestions();" />
-                <input id="empId" type="text" value="0"></input><br/>
+                <span class="block">Name:</span>
+                <input id="employees" data-new="" class="input-text" type="text" value="" onkeyup="return widget.onNameUp(event,this);" onkeydown="return widget.onNameDown(event, this);" onblur="return widget.hideNameSuggestions();" /><br style="margin:0;padding:0;"/>
+                <input id="empId" type="text" value="0"></input>
                 <div style="position:relative;width:140px;">
                     <div id="foundEmps" class="suggestions"></div>
                 </div>
-                <span>Nickname:</span>
+                <span class="block">Nickname:</span>
                 <input id="aliasInput" class="input-text" type="text" value="" onkeyup="return widget.changesMade();"/>
-                <span>Home area:</span>
+                <span class="block">Home area:</span>
                 <input id="areaInput" class="input-text" type="text" value="" onkeyup="return widget.onAreaChange(event, this);" onblur="return widget.hideAreaSuggestions();"/>
                 <div style="position:relative;width:140px;">
                     <div id="foundArea" class="suggestions"></div>
                 </div>
-                <span>Request interval (ms):</span>
+                <span class="block">Request interval (ms):</span>
                 <input id="intervalInput" class="input-text" type="text" value="" onkeyup="return widget.changesMade();"/>
                 <span>Mute:</span><br/>
                 <input id="muteInput" class="input-check" type="checkbox" onclick="return widget.changesMade();"/><br/>

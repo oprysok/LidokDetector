@@ -297,7 +297,11 @@ Widget.prototype.prevNameSuggestion = function (event) {
     "use strict";
     var activeIndex, firstIndex, lastIndex, node, x, currentIndex, prev;
     if (this.dom.employeesSuggestions.innerHTML !== "") {
-        event.preventDefault();
+        if (event.preventDefault) {
+            event.preventDefault();
+        } else {
+            event.returnValue = false;
+        }
         activeIndex = firstIndex = lastIndex = -1;
         for (x = 0; x < this.dom.employeesSuggestions.childNodes.length; x += 1) {
             node = this.dom.employeesSuggestions.childNodes[x];
@@ -375,7 +379,7 @@ Widget.prototype.findNameSuggestions = function (inputEl) {
 //Event handlers
 Widget.prototype.onNameUp = function (event, that) {
     "use strict";
-    var keyCode = (event !== undefined) ? event.which : event.keyCode;
+    var keyCode = (event.which !== undefined) ? event.which : event.keyCode;
     if (keyCode !== 27 && keyCode !== 13 && keyCode !== 38 && keyCode !== 37 && keyCode !== 39 && keyCode !== 40) {
         this.findNameSuggestions(that);
     }
@@ -383,9 +387,17 @@ Widget.prototype.onNameUp = function (event, that) {
 Widget.prototype.onNameDown = function (event, that) {
     "use strict";
     var keyCode, activeEl;
-    keyCode = (event !== undefined) ? event.which : event.keyCode;
+    keyCode = (event.which !== undefined) ? event.which : event.keyCode;
     if (keyCode === 27) {
-        this.hideNameSuggestions();
+        if (this.dom.employeesSuggestions.innerHTML !== "") {
+            this.hideNameSuggestions();
+        } else {
+            if (parseInt(this.dom.employeesInputId.value, 10) === this.settings.userId) {
+                that.value = this.settings.name;
+            } else {
+                that.value = that.getAttribute("data-new");
+            }
+        }
     } else if (keyCode === 13) {
         activeEl = this.getActiveNameSuggestion();
         if (activeEl !== undefined) {
@@ -395,7 +407,11 @@ Widget.prototype.onNameDown = function (event, that) {
         if (this.dom.employeesSuggestions.innerHTML === "") {
             this.findNameSuggestions(that);
         } else {
-            event.preventDefault();
+            if (event.preventDefault) {
+                event.preventDefault();
+            } else {
+                event.returnValue = false;
+            }
             this.nextNameSuggestion();
         }
     } else if (keyCode === 38) {
@@ -405,7 +421,7 @@ Widget.prototype.onNameDown = function (event, that) {
 Widget.prototype.onAreaChange = function (event, that) {
     "use strict";
     var keyCode, str, found, i, name;
-    keyCode = (event !== undefined) ? event.which : event.keyCode;
+    keyCode = (event.which !== undefined) ? event.which : event.keyCode;
     if (keyCode === 27) {
         this.hideAreaSuggestions();
     } else {
@@ -434,6 +450,7 @@ Widget.prototype.onClickNameSuggestion = function (that, id, name) {
     "use strict";
     this.dom.employeesInputId.value = parseInt(id, 10);
     this.dom.employeesInputId.setAttribute("data-name", name);
+    this.dom.employeesInputAc.setAttribute("data-new", name);
     this.dom.employeesInputAc.value = that.innerHTML;
     this.hideNameSuggestions();
     this.changesMade();
@@ -462,7 +479,7 @@ Widget.prototype.onSuggestionOut = function (that) {
 };
 Widget.prototype.changesMade = function () {
     "use strict";
-    if (this.settings.alias === this.dom.aliasInput.value && this.settings.userId === parseInt(this.dom.employeesInputId.value, 10) && this.settings.homeArea === this.dom.areaInput.value && this.settings.interval === parseInt(this.dom.intervalInput.value, 10) && this.settings.mute === this.dom.muteInput.checked) {
+    if (this.settings.alias === this.dom.aliasInput.value && this.settings.userId === parseInt(this.dom.employeesInputId.value, 10) && this.settings.homeArea.alias === this.dom.areaInput.value && this.settings.interval === parseInt(this.dom.intervalInput.value, 10) && this.settings.mute === this.dom.muteInput.checked) {
         this.dom.saveSpan.className = "disabled";
     } else {
         this.dom.saveSpan.className = "";
