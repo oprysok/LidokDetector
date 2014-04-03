@@ -21,7 +21,8 @@ function Widget() {
         "Office KBP5-C",
         "Office KBP5-G",
         "Office KBP5-L",
-        "Office KBP5-R"
+        "Office KBP5-R",
+		"Location-KBP5C-Finance"
     ];
     this.settings = {};
     this.settingsDefault = {
@@ -91,7 +92,7 @@ Widget.prototype.getEmployees = function () {
 Widget.prototype.checkLidok = function (obj, that) {
     "use strict";
     var res = JSON.parse(obj);
-    if (res.area !== null && res.working !== false) {
+    if (res.area !== null) {
         that.currentLocationName = res.area.replace("Office KBP", "").replace("-", "");
         that.dom.locationSpan.innerHTML = res.direction === "in" ? "Now in " +  that.currentLocationName : "Last seen in " + that.currentLocationName;
         that.dom.userSpan.innerHTML = that.settings.name;
