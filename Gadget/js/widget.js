@@ -6,23 +6,23 @@ function Widget() {
     this.currentLocationName = null;
     this.employeeList = null;
     this.areaList = [
-        "Office KBP1-C",
-        "Office KBP1-R",
-        "Office KBP2-R",
-        "Office KBP3-C",
-        "Office KBP3-D",
-        "Office KBP3-G",
-        "Office KBP3-L",
-        "Office KBP3-R",
-        "Office KBP4-C",
-        "Office KBP4-G",
-        "Office KBP4-L",
-        "Office KBP4-R",
-        "Office KBP5-C",
-        "Office KBP5-G",
-        "Office KBP5-L",
-        "Office KBP5-R",
-		"Location-KBP5C-Finance"
+        {id: 0, name: "Office KBP1-C", alias: "1C"},
+        {id: 0, name: "Office KBP1-R", alias: "1R"},
+        {id: 0, name: "Office KBP2-R", alias: "2R"},
+        {id: 0, name: "Office KBP3-C", alias: "3C"},
+        {id: 0, name: "Office KBP3-D", alias: "3D"},
+        {id: 0, name: "Office KBP3-G", alias: "3G"},
+        {id: 0, name: "Office KBP3-L", alias: "3L"},
+        {id: 0, name: "Office KBP3-R", alias: "3R"},
+        {id: 0, name: "Office KBP4-C", alias: "4C"},
+        {id: 0, name: "Office KBP4-G", alias: "4G"},
+        {id: 0, name: "Office KBP4-L", alias: "4L"},
+        {id: 0, name: "Office KBP4-R", alias: "4R"},
+        {id: 0, name: "Office KBP5-C", alias: "5C"},
+        {id: 0, name: "Office KBP5-G", alias: "5G"},
+        {id: 0, name: "Office KBP5-L", alias: "5L"},
+        {id: 0, name: "Office KBP5-R", alias: "5R"},
+        {id: 0, name: "Location-KBP5C-Finance", alias: "5C-Finance"}
     ];
     this.settings = {};
     this.settingsDefault = {
@@ -30,7 +30,7 @@ function Widget() {
         "userId": 2323,
         "name": "Andrii Klymenko",
         "alias": "Lidok",
-        "homeArea": "Office KBP3-L",
+        "homeArea": {name: "Office KBP3-L", alias: "3L"},
         "mute": true
     };
     this.dom = {
@@ -97,7 +97,7 @@ Widget.prototype.checkLidok = function (obj, that) {
         that.dom.locationSpan.innerHTML = res.direction === "in" ? "Now in " +  that.currentLocationName : "Last seen in " + that.currentLocationName;
         that.dom.userSpan.innerHTML = that.settings.name;
         that.dom.whenSpan.innerHTML = res.direction !== "in" ? "(" + moment(res.timestamp).fromNow() + ")" : "";
-        if (res.area === that.settings.homeArea && res.direction === "in") {
+        if (res.area === that.settings.homeArea.name && res.direction === "in") {
             that.changeState(true);
         } else {
             that.changeState(false);
@@ -163,7 +163,7 @@ Widget.prototype.fillSettings = function () {
     this.dom.employeesInputAc.value = this.settings.name;
     this.dom.employeesInputId.value = this.settings.userId;
     this.dom.aliasInput.value = this.settings.alias;
-    this.dom.areaInput.value = this.settings.homeArea;
+    this.dom.areaInput.value = this.settings.homeArea.alias;
     this.dom.intervalInput.value = this.settings.interval;
     this.dom.muteInput.checked = this.settings.mute;
 };
@@ -174,13 +174,27 @@ Widget.prototype.saveSettings = function () {
         this.settings.userId = parseInt(this.dom.employeesInputId.value, 10);
     }
     this.settings.alias = this.dom.aliasInput.value;
-    this.settings.homeArea = this.areaList.indexOf(this.dom.areaInput.value) === -1 ? this.settings.homeArea : this.dom.areaInput.value;
+    var area = this.findArea(this.dom.areaInput.value);
+    if (area !== undefined) {
+        this.settings.homeArea = area;
+    }
     if (!isNaN(this.dom.intervalInput.value)) {
         this.settings.interval = parseInt(this.dom.intervalInput.value, 10);
     }
     this.settings.mute = this.dom.muteInput.checked;
     this.hideNameSuggestions();
 };
+
+Widget.prototype.findArea = function (input) {
+    'use strict';
+    var i;
+    for (i = 0; i < this.areaList.length; i += 1) {
+        if (this.areaList[i].alias === input) {
+            return this.areaList[i];
+        }
+    }
+};
+
 Widget.prototype.mergeSettings = function (obj1, obj2) {
     "use strict";
     var p;
@@ -211,11 +225,14 @@ Widget.prototype.saveConfig = function () {
         filespec = System.Gadget.path + "\\" + this.configFileName;
         fso = new ActiveXObject("Scripting.FileSystemObject");
         if (fso.FileExists(filespec)) {
-            fso.DeleteFile(filespec);
+            try {
+                fso.DeleteFile(filespec);
+            } catch (ignore) {
+            }
         }
-        fso.CreateTextFile(filespec, true);
         a = fso.CreateTextFile(filespec, true);
         a.WriteLine(JSON.stringify(this.settings));
+        a.Close();
     }
 };
 Widget.prototype.readConfig = function () {
@@ -392,14 +409,14 @@ Widget.prototype.onAreaChange = function (event, that) {
     if (keyCode === 27) {
         this.hideAreaSuggestions();
     } else {
-        str = that.value.toLowerCase().trim().replace("-", "");
+        str = that.value.toLowerCase().trim();
         if (str !== '' && str.length > 0) {
             this.dom.areasSuggestions.innerHTML = "";
             for (i = 0; i < this.areaList.length; i += 1) {
-                name = this.areaList[i];
-                found = name.toLowerCase().replace("-", "").indexOf(str) !== -1 ? true : false;
+                name = this.areaList[i].alias;
+                found = name.toLowerCase().indexOf(str) !== -1 ? true : false;
                 if (found) {
-                    this.dom.areasSuggestions.innerHTML += "<div onmouseleave=\"return widget.onSuggestionOut(this);\" onmouseover=\"return widget.onSuggestionHover(this);\" onmousedown=\"return widget.onClickAreaSuggestion('" + this.areaList[i] + "');\" class=\"suggestion\">" + this.areaList[i] + "</div><br/>";
+                    this.dom.areasSuggestions.innerHTML += "<div onmouseleave=\"return widget.onSuggestionOut(this);\" onmouseover=\"return widget.onSuggestionHover(this);\" onmousedown=\"return widget.onClickAreaSuggestion('" + this.areaList[i].alias + "');\" class=\"suggestion\">" + this.areaList[i].alias + "</div><br/>";
                 }
             }
             if (this.dom.areasSuggestions.innerHTML !== "") {
