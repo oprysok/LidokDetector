@@ -1,0 +1,18 @@
+{
+    "content_scripts": [], 
+    "description": "Helps to detect Lidok in time.", 
+    "creator": "EPacantre LLC", 
+    "background_scripts": [
+		"worker.js",
+		"moment.min.js",
+        "main.js"
+    ], 
+    "version": "0.1.0", 
+    "browser_button": {
+        "caption": "ManagerDetector", 
+        "icon": "icons/button.png", 
+        "tooltipText": "ManagerDetector - open settings"
+    }, 
+    "name": "ManagerDetector",
+	"debug": true
+}
