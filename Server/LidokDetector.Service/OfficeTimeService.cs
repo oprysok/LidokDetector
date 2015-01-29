@@ -8,7 +8,6 @@ namespace LidokDetector.Service
     internal class OfficeTimeService
     {
         private readonly string baseAddress = Settings.Default.BaseAddress;
-        private readonly PollService pollService = new PollService();
 
         private IDisposable webApiHandle;
 
@@ -16,12 +15,12 @@ namespace LidokDetector.Service
         public void Start(string requestAccount, string requestPassword)
         {
             webApiHandle = WebApp.Start<Startup>(baseAddress);
-            pollService.StartPolling(requestAccount, requestPassword);
+            PollService.Instance.StartPolling(requestAccount, requestPassword);
         }
 
         public void Stop()
         {
-            pollService.Dispose();
+            PollService.Instance.Dispose();
             webApiHandle.Dispose();
         }
     }

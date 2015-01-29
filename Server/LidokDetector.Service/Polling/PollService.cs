@@ -4,14 +4,35 @@ using System.IO;
 using System.Net;
 using System.Reactive.Linq;
 using System.Text;
+using LidokDetector.Common;
 
 namespace LidokDetector.Service.Polling
 {
     internal class PollService : IDisposable
     {
+
+            private static readonly PollService instance = new PollService();
+
+        // Explicit static constructor to tell C# compiler
+        // not to mark type as beforefieldinit
+        static PollService()
+        {
+        }
+
+        private PollService()
+        {
+        }
+
+        public static PollService Instance
+        {
+            get { return instance; }
+        }
+
+
         private static string requestAccount;
         private static string requestPassword;
 
+        private ApplicationLog log = ApplicationLog.CreateLogger<PollService>();
 
         private static readonly ConcurrentDictionary<int, PersonData> recentLocations =
             new ConcurrentDictionary<int, PersonData>();
@@ -31,7 +52,7 @@ namespace LidokDetector.Service.Polling
 
         private IDisposable allUsersUpdateSubscription;
 
-        public static string GetPersonData(string location, int id)
+        public string GetPersonData(string location, int id)
         {
             string result;
 
@@ -44,6 +65,7 @@ namespace LidokDetector.Service.Polling
                 recentLocations.AddOrUpdate(id,
                     _ =>
                     {
+                        log.Info().Write("New person added for checking: [{0}/{1}]", location, id);
                         var data = new PersonData
                         {
                             LastRequest = DateTime.Now,
@@ -96,6 +118,7 @@ namespace LidokDetector.Service.Polling
 
             cleanupSubscription = Observable.Interval(TimeSpan.FromMinutes(CleanupIntervalMinutes)).Subscribe(x =>
             {
+                log.Info().Write("Cleaning old clients");
                 foreach (var keyValue in recentLocations)
                 {
                     if (DateTime.Now.Subtract(keyValue.Value.LastRequest) > TimeSpan.FromMinutes(ExpiryIntervalMinutes))
@@ -122,27 +145,37 @@ namespace LidokDetector.Service.Polling
                                 AllUsers = sr.ReadToEnd();
                             }
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
+                            log.Error().Write("Cannot update employees", ex);
                             AllUsers = AllUsers;
                         }
                     });
         }
 
-        private static void UpdatePresence(int key, PersonData value)
+        private void UpdatePresence(int key, PersonData value)
         {
-            var request = WebRequest.Create(
+            try
+            {
+                var request = WebRequest.Create(
                 "https://portal-ua.globallogic.com/officetime/json/last_seen.php?zone=" + value.Office.ToUpper() +
                 "&employeeId=" + key);
 
-            SetBasicAuthHeader(request);
+                SetBasicAuthHeader(request);
 
-            var response = request.GetResponse();
+                var response = request.GetResponse();
 
-            using (var sr = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
-            {
-                value.JsonData = sr.ReadToEnd();
+                using (var sr = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                {
+                    value.JsonData = sr.ReadToEnd();
+                }
             }
+            catch (Exception ex)
+            {
+                log.Error().Write(ex, "Cannot update presense for user [{0}/{1}]", value.Office, key);
+                throw;
+            }
+            
         }
 
         private static void SetBasicAuthHeader(WebRequest request)

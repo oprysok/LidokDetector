@@ -86,7 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\LocationController.cs" />
-    <Compile Include="Controllers\RawJsonContent.cs" />
+    <Compile Include="RawJsonContent.cs" />
     <Compile Include="OfficeTimeService.cs" />
     <Compile Include="Polling\PersonData.cs" />
     <Compile Include="Polling\PollService.cs" />
@@ -106,6 +106,12 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LidokDetector.Common\LidokDetector.Common.csproj">
+      <Project>{93C40DF6-5634-4852-B746-AE22A9C1017B}</Project>
+      <Name>LidokDetector.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

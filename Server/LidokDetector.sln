@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LidokDetector.Service", "LidokDetector.Service\LidokDetector.Service.csproj", "{B1806CF3-0A24-4C8C-9E51-D98467886CD4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LidokDetector.Common", "LidokDetector.Common\LidokDetector.Common.csproj", "{93C40DF6-5634-4852-B746-AE22A9C1017B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{B1806CF3-0A24-4C8C-9E51-D98467886CD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1806CF3-0A24-4C8C-9E51-D98467886CD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1806CF3-0A24-4C8C-9E51-D98467886CD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93C40DF6-5634-4852-B746-AE22A9C1017B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93C40DF6-5634-4852-B746-AE22A9C1017B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93C40DF6-5634-4852-B746-AE22A9C1017B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93C40DF6-5634-4852-B746-AE22A9C1017B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

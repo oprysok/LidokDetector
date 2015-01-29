@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Text;
+using LidokDetector.Common;
 using LidokDetector.Service.Properties;
 using Topshelf;
 
@@ -8,6 +9,8 @@ namespace LidokDetector.Service
 {
     internal class Program
     {
+        private static ApplicationLog log = ApplicationLog.CreateLogger<Program>();
+
         private static void Main(string[] args)
         {
             string serviceAccount = UnprotectSetting(Settings.Default.ServiceAccount);
@@ -20,9 +23,20 @@ namespace LidokDetector.Service
                     s.ConstructUsing(_ => new OfficeTimeService());
                     s.WhenStarted(
                         ots =>
+                        {
+                            log.Info().Write("Starting service");
                             ots.Start(UnprotectSetting(Settings.Default.UserAccount),
-                                UnprotectSetting(Settings.Default.UserPassword)));
-                    s.WhenStopped(ots => ots.Stop());
+                                UnprotectSetting(Settings.Default.UserPassword));
+                            AppDomain.CurrentDomain.UnhandledException += (sender, ex) =>
+                            {
+                                log.Error().Write("Unhandled exception", (Exception) ex.ExceptionObject);
+                            };
+                        });
+                    s.WhenStopped(ots =>
+                    {
+                        log.Info().Write("Stopping service");
+                        ots.Stop();
+                    });
                 });
 
                 x.SetServiceName("LidokDetectorService");

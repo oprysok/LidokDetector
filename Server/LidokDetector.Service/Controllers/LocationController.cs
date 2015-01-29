@@ -19,7 +19,7 @@ namespace LidokDetector.Service.Controllers
 
             try
             {
-                result = PollService.GetPersonData(locationName, parsedId);
+                result = PollService.Instance.GetPersonData(locationName, parsedId);
             }
             catch (Exception ex)
             {
