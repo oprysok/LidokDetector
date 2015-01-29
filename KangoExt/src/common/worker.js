@@ -25,7 +25,7 @@ function Widget() {
     this.settings = {};
     this.settingsDefault = {
         "interval": 3000,
-        "userId": 4160,
+        "userId": 2323,
         "name": "Andrii Klymenko",
         "alias": "Lidok",
         "homeArea": {name: "Office KBP3-L", alias: "3L"},
@@ -190,7 +190,8 @@ Widget.prototype.ajax = function ($url, $object, $that) {
         method: 'GET',
         url: $url,
         async: true,
-        contentType: 'text'
+        contentType: 'text',
+		headers: {'Cache-Control': 'private, max-age=0, no-cache'}
 	};
 	kango.xhr.send(details, function(data) {
         if (data.status == 200 && data.response != null) {
